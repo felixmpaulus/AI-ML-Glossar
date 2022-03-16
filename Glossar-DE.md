@@ -9,14 +9,16 @@
     1. jeder Zeile wird ein Gewicht zugeteilt (zu Beginn sind alle Gewichte gleich, also 1/N).
     2. für jede Spalte wird die Gini-Impurity berechnet, die Spalte mit geringster Gini-Impurity wird als erster fertiger Tree gespeichert.
     3. der Error eines Trees berechnet sich aus der Summe aller Zeilengewichte der Zeilen, die der Tree falsch zuordnet (0 <= Error <= 1).
-    4. der 'amount of say' dieses Trees wird jetzt durch eine Log-Funktion des Errors berechnet (Error gegen 0 -> großer 'amount of say').
+    4. der 'amount of say' dieses Trees wird jetzt durch eine Log_e-Funktion des Errors berechnet (Error gegen 0 -> großer 'amount of say').
     5. nun werden die Gewichte aller Zeilen angepasst:
         1. die Zeilen, die falsch zugeordnet wurden, werden mit e^(amount of say) skaliert.
         2. die Zeilen, die korrekt zugeordnet wurden, werden mit e^-(amount of say) skaliert.
         3. abschließend müssen alle Gewichte normalisiert werden.
-    6. jetzt wird ein neuer Datensatz gebildet
-        1. eine zufällige Zahl sei wiederholt gegeben bis der neue Datensatz so groß wie der alte Datensatz ist
-        2. es wird die Zeile in den neuen Datensatz übertragen, deren Gewicht (aufsummiert mit allen vorherigen Gewichten) >= der zufälligen Zahl ist
+    6. jetzt wird ein neuer Datensatz gebildet.
+        1. eine zufällige Zahl sei wiederholt gegeben bis der neue Datensatz so groß wie der alte Datensatz ist.
+        2. es wird die Zeile in den neuen Datensatz übertragen, deren Gewicht (aufsummiert mit allen vorherigen Gewichten) >= der zufälligen Zahl ist (hohes Gewicht -> hohe Wahrscheinlichkeit (ggfs. mehrfach) übertragen zu werden).
+    7. ab Schritt 2 wird wieder ein neuer Tree erstellt (die Spalte des ersten Trees bleibt erhalten) und anschließend werden erneut die Gewichte angepasst (im originalen Datensatz).
+    8. Wenn jetzt ein Datensatz von allen Trees zugeordnet wird, dann wird die Summe der 'amount of says' aller Trees mit derselben Zuordnung aufsummiert. Die Zuordnung mit der höchsten Summe gewinnt.
 - https://www.youtube.com/watch?v=LsK-xG1cLYA&ab_channel=StatQuestwithJoshStarmer
 
 **Bagging (Randm Forest Tree)**
@@ -56,6 +58,20 @@ x **Cross-Validation**
 - für einen numerischen Predictor siehe Video:
 - https://www.youtube.com/watch?v=_L39rN6gz7Y
 - https://en.wikipedia.org/wiki/Decision_tree_learning#Gini_impurity
+
+**Gradient Boost (for Regression and classification)**
+- ähnlich zu AdaBoost, ein Forest wird gebaut.
+- die Trees werden nicht unabhängig voneinander gebaut. Ein Tree (bzw. dessen Fehler) hat Einfluss auf die Berechnung des nächsten Trees.
+- die einzelnen Trees wachsen nur bis zu einer festgelegten Größe (8 bis 32 Blattknoten üblich).
+- Durchführung:
+    1. das durchschnittliche Outcome wird berechnet (erster Tree, nur ein Knoten).
+    2. der Fehler (Residual) des ersten Trees (einfache Differenz zw. Durchschnitt und Outcome) wird an jede Zeile angehängt.
+    3. jetzt wird klassisch ein Tree berechnet, welcher das Residuum predictet, nicht das Outcome.
+    4. durch die festgelegte Tiefe können mehrere Zeilen in Blattknoten gruppiert werden. Hier wird der Durchschnitt gebildet.
+    5. Um einen Datensatz zuzuordnen, wird dieser durch den ersten Tree berechnet (nur ein Knoten, immer der Durchschnitt des Outcomes), dann wird jeder weitere Tree (skaliert mit einer learningrate 0 <= l <= 1>) dazu addiert.
+    6. mit der neu berechneten Zuordnung wird nun erneut der Fehler (Residual) gebildet und jeder Zeile angehängt.
+    7. wieder bei Schritt 3 beginnen, so oft durchführen bis keine Verbesserung mehr oder eine festgelegte Zahl an Durchführungen erreicht ist.
+- viele Durchführungen mit geringer learningrate führen zu besseren Ergebnissen.
 
 **Preventive Maintenance**
 - Wartung, bevor ein Versagen oder eine Fehlfunktion eingetreten ist. Ziel ist die Reduzierung der Wahrscheinlichkeit eines Versagens oder einer Fehlfunktion.
