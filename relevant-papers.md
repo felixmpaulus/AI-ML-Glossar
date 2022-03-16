@@ -21,10 +21,11 @@ Fabian Reinecke, Sebastian Sochaki, Stefan Bracke
 Sebastian Sochacki, Fabian Reinecke, and Stefan Bracke
 
 - predict the probability for each specific product in a fleet to be affected by one or more failure modes over their lifetime
-- the specific usage by the end consumer is described by several usage variables
-- synthetic dataset is used
-- model is supervised machine learning technique of Gradient Tree Boosting
-- Classification or Regression Tree (CART)
+- synthetic dataset is used, multiple varibales, multiple datatypes
+- model is supervised machine learning technique of Gradient Tree Boosting (Classification or Regression Tree (CART))
+- the data consists of warranty data (3 failures are recognized) and product fleet data
+- the model is trained with the full dataset
+- the fleet data (no failures) is then interpolated (to look into the future) and then used on the model to predict failure probability
 
 
 # Predictive maintenance enabled by machine learning: Use cases and challenges in the automotive industry

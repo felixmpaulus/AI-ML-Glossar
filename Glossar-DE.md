@@ -34,12 +34,30 @@ x **BIAS** (vs. Varianz)
 
 
 x **CART (Classification and Regression Trees)**
+- Frage: Regression oder Classification? Was genau beschreibt CART?
 
 
-x **Censoring**
-    -> Left censoring – a data point is below a certain value but it is unknown by how much.
-    -> Interval censoring – a data point is somewhere on an interval between two values.
-    -> Right censoring – a data point is above a certain value but it is unknown by how much.
+**Censoring (Survival-Time Analysis)**
+- 3 Arten von Zensur: links, interval und rechts.
+- Daten werden zensiert, wenn nicht exakt bekannt ist, wann ein Ereignis (welches berücksichtigt wird) eingetroffen ist.
+- Zensierte Daten werden bei der Ereigniszeitanalyse berücksichtigt (im Gegensatz zur Truncation).
+- linke Zensur:
+    - Das Ereignis ist irgendwann 'links' von einem bekannten Zeitpunkt eingetroffen.
+    - 'das Ereignis ist innerhalb von 2 Jahren eingetroffen, wann genau wissen wir nicht, aber wir wissen dass t < 2'.
+    - t < x
+    - i.d.R. wenn Teilnehmer einer Studie beitreten, bei denen das Ereignis bereits eingetreten ist.
+- interval Zensur:
+    - Das Ereignis ist irgendwann zwischen zwei Zeitpunkten eingetroffen.
+    - 'das Ereignis ist nach Ablauf von 2 Jahren aber vor Ablauf von 4 Jahren eingetroffen, wann genau wissen wir nicht, aber wir wissen dass 2 < t < 4'.
+    - x_1 < t < x_2
+    - z.B. wenn in konstanten Abständen Checkups durchgeführt werden und genaue Zeitpunkte nicht ermittelt werden können.
+- rechte Zensur:
+    - Das Ereignis ist irgendwann 'rechts' von einem bekannten Zeitpunkt eingetroffen.
+    - 'das Ereignis ist nach 2 Jahren eingetroffen, wann genau wissen wir nicht, aber wir wissen dass t > 2'.
+    - t > x
+    - häufigste Zensur, i.d.R. bei Ablauf einer Studie und Teilnehmern, bei denen das Ereignis noch nicht eingetroffen ist.
+    - Zensur wird als Kreis symbolisiert (Ereignis i.d.R. als Kreuz).
+
 
 
 **Classification Tree**
@@ -93,7 +111,7 @@ x **Ereigniszeitanalyse**
 
 **Gradient Boost for Classification**
 - ähnlich zu AdaBoost, ein Forest wird gebaut.
-- es wird i.d.R. ein Label gegen alle anderen klassifiziert (ja/nein, wahr/undwahr, -> binärer Charakter).
+- es wird i.d.R. ein Label gegen alle anderen klassifiziert (ja/nein, wahr/unwahr, -> binärer Charakter).
 - die Trees werden nicht unabhängig voneinander gebaut. Ein Tree (bzw. dessen Fehler) hat Einfluss auf die Berechnung des nächsten Trees.
 - die einzelnen Trees wachsen nur bis zu einer festgelegten Größe (8 bis 32 Blattknoten üblich).
 - 'Gradient' weil das Residuum auf der Ableitung der Loss-Funktion nach dem Predictor basiert ((0.5*(outcome-predicted))^2)' = -(outcome-predicted) = Error).
@@ -137,6 +155,9 @@ x **Hazard-ratio**
 
 
 x **Kaplan-Meier plot**
+- Überlebenswahrscheinlichkeit über eine verstrichenen Zeit t
+- 'wie viel Prozent der 'Teilnehmer' leben zu einer absoluten Zeit t?'
+- 'non-parametric' Plot (keine Parameter involviert)
 
 
 x **Konfidenzintervall**
@@ -151,6 +172,7 @@ x **Kurtosis**
 
 x **Linear Regression**
 - n Datenpunkte durch eine lineare Funktion beschreiben, sodass alle Fehlerquadrate minimiert werden.
+- in höheren Dimension mächtig für Machine Learning Anwendungen
 - R^2 berechnen (2D):
     - zwischen 0 und 1, größer ist besser.
     - R^2 kann interpretiert werden, als die Reduktion der Varianz um R^2 Prozent, wenn die x-Daten berücksichtigt werden oder.
@@ -164,12 +186,20 @@ x **Linear Regression**
 x **log(likelihood)**
 
 x **Logistical Regression**
-- 
+- ähnlich zu linearer Regression, jedoch für die Zuordnung zu binären und nicht zu kontinuierliche/numerische Outcomes.
+- Predictor-Spalten können kontinuierlich/numerisch oder diskret sein
+- ordnet Daten einem true oder false zu
+- Kurve hat eine S-Form
+
+- https://www.youtube.com/watch?v=yIYKR4sgzI8&t=1s
 
 
 x **Logrank test**
     ->https://www.ncbi.nlm.nih.gov/pmc/articles/PMC403858/#ref3
     -> https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1065034/
+
+
+x **Maximum Likelihood**
 
 
 x **Multivariate Statistical Modelling**
@@ -222,13 +252,35 @@ The RIPPER (Repeated Incremental Pruning to Produce Error Reduction) algorithm c
 **Squaring everything instead of taking the absolute**
 - warum werden so viele Fehler durch quadrierung positiv gemacht und nicht durch den Betrag? -> Weil es die Mathematik (z.B. Ableitungen), die anschließend angewandt wird, erheblich erleichtert.
 
+
+**Survival Analysis / Ereigniszeitanalyse**
+- auch 'time to event' Analyse genannt
+- Visualisierung über Kaplan-Meyer-Plot
+- Daten müssen ggfs. vor Verwendung Zensiert werden
+
+
 x **T-Verteilung vs. Normalverteilung**
 
+
+**Truncation / Abschneiden (Survival Analysis)**
+- abgeschnittene Daten werden nicht bei der Survival-Analysis berücksichtigt.
+- eine Abschneidung von Daten ist nicht gewollt und kann oft nicht vermieden werden, muss aber bei der Survival Analysis berücksichtigt werden.
+- linke Abschneidung:
+    - wenn Ereignisse so früh eintreffen, dass sie nicht mit in die Studie aufgenommen werden können, handelt es sich um eine linke Abschneidung
+    - 'wenn Neugeborene so früh sterben, dass sie gar nicht erst aufgenommen werden können'
+        - würden die abgeschnittenen Daten hier nicht berücksichtigt werden, hätten die Daten einen Bias zu einer niedrigen Sterbewahrscheinlichkeit direkt nach Geburt
+- rechte Abschneidung
+    - wenn das Ereignis eintritt, der Startzeitpunkt aber sehr weit in der Vergangenheit liegt.
+    - 'wenn jemand an AIDS erkrankt, es aber nicht mehr festgestellt werden kann wann die HIV Infektion stattgefunden hat'
+        - würden die abgeschnittenen Daten hier nicht berücksichtigt werden, hätten die Daten einen Bias zu früher AIDS-Erkrankung nach HIV-Infektion
 
 x **Überlebensfuntion**
 
 
 x **Varianz** (vs. Bias)
+
+
+x **Wald's Test**
 
 
 x **Weibull-Modell**
