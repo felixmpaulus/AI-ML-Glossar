@@ -93,18 +93,22 @@ x **Ereigniszeitanalyse**
 
 **Gradient Boost for Classification**
 - ähnlich zu AdaBoost, ein Forest wird gebaut.
+- es wird i.d.R. ein Label gegen alle anderen klassifiziert (ja/nein, wahr/undwahr, -> binärer Charakter).
 - die Trees werden nicht unabhängig voneinander gebaut. Ein Tree (bzw. dessen Fehler) hat Einfluss auf die Berechnung des nächsten Trees.
 - die einzelnen Trees wachsen nur bis zu einer festgelegten Größe (8 bis 32 Blattknoten üblich).
-- 'Gradient' weil das Residuum auf der Ableitung der Loss-Funktion nach dem Predictor basiert ((0.5*(outcome-predicted))^2)' = -(outcome-predicted) = Error)
+- 'Gradient' weil das Residuum auf der Ableitung der Loss-Funktion nach dem Predictor basiert ((0.5*(outcome-predicted))^2)' = -(outcome-predicted) = Error).
 - Durchführung:
-    1. das durchschnittliche Outcome wird berechnet (erster Tree, nur ein Knoten).
-    2. der Fehler (Residual) des ersten Trees (einfache Differenz zw. Durchschnitt und Outcome) wird an jede Zeile angehängt.
+    1. das predictet Outcome wird berechnet (erster Tree, nur ein Knoten).
+        - wenn erster Tree, dann wird der Anteil ('odds') aller 'wahren' Outcomes an allen Outcomes an die Logistic-Funktion übergeben (e^log(odds)/1+e^log(odds)). Auch 'log(likelihood)' genannt.
+        - wenn späterer Tree, wird das Outcome für jede Zeile über alle bisher erstellten Trees predictet.
+    2. der Fehler (Residual) des ersten Trees (einfache Differenz zw. predictet Outcome und Outcome) wird an jede Zeile angehängt.
     3. jetzt wird klassisch ein Tree berechnet, welcher das Residuum predictet, nicht das Outcome.
-    4. durch die festgelegte Tiefe können mehrere Zeilen in Blattknoten gruppiert werden. Hier wird der Durchschnitt gebildet.
-    5. Um einen Datensatz zuzuordnen, wird dieser durch den ersten Tree berechnet (nur ein Knoten, immer der Durchschnitt des Outcomes), dann wird jeder weitere Tree (skaliert mit einer learningrate 0 <= l <= 1>) dazu addiert.
+    4. durch die festgelegte Tiefe können mehrere Zeilen in Blattknoten gruppiert werden. 
+        1. um diese Residuen zusammenzufassen, müssen sie transformiert werden. Der Durchschnitt ist nicht ausreichend. Siehe Video @8:00!
+    5. um einen Datensatz zuzuordnen, wird dieser durch den ersten Tree berechnet (nur ein Knoten, immer der Durchschnitt des Outcomes), dann wird jeder weitere Tree (skaliert mit einer learningrate 0 <= l <= 1>) dazu addiert.
     6. mit der neu berechneten Zuordnung wird nun erneut der Fehler (Residual) gebildet und jeder Zeile angehängt.
     7. wieder bei Schritt 3 beginnen, so oft durchführen bis keine Verbesserung mehr oder eine festgelegte Zahl an Durchführungen (z.B. 100 Trees) erreicht ist.
-    8. 
+    8. ist der Forest fertig, wird für einen Datensatz das Outcome predictet. Das Outcome muss(!) noch mit der Logistics-Funktion skaliert werden (0...1).
 - viele Durchführungen mit geringer learningrate führen zu besseren Ergebnissen.
 - https://www.youtube.com/watch?v=jxuNLH5dXCs
 
@@ -113,16 +117,15 @@ x **Ereigniszeitanalyse**
 - ähnlich zu AdaBoost, ein Forest wird gebaut.
 - die Trees werden nicht unabhängig voneinander gebaut. Ein Tree (bzw. dessen Fehler) hat Einfluss auf die Berechnung des nächsten Trees.
 - die einzelnen Trees wachsen nur bis zu einer festgelegten Größe (8 bis 32 Blattknoten üblich).
-- 'Gradient' weil das Residuum auf der Ableitung der Loss-Funktion nach dem Predictor basiert ((0.5*(outcome-predicted))^2)' = -(outcome-predicted) = Error)
+- 'Gradient' weil das Residuum auf der Ableitung der Loss-Funktion nach dem Predictor basiert ((0.5*(outcome-predicted))^2)' = -(outcome-predicted) = Error).
 - Durchführung:
     1. das durchschnittliche Outcome wird berechnet (erster Tree, nur ein Knoten).
     2. der Fehler (Residual) des ersten Trees (einfache Differenz zw. Durchschnitt und Outcome) wird an jede Zeile angehängt.
     3. jetzt wird klassisch ein Tree berechnet, welcher das Residuum predictet, nicht das Outcome.
     4. durch die festgelegte Tiefe können mehrere Zeilen in Blattknoten gruppiert werden. Hier wird der Durchschnitt gebildet.
-    5. Um einen Datensatz zuzuordnen, wird dieser durch den ersten Tree berechnet (nur ein Knoten, immer der Durchschnitt des Outcomes), dann wird jeder weitere Tree (skaliert mit einer learningrate 0 <= l <= 1>) dazu addiert.
+    5. um einen Datensatz zuzuordnen, wird dieser durch den ersten Tree berechnet (nur ein Knoten, immer der Durchschnitt des Outcomes), dann wird jeder weitere Tree (skaliert mit einer learningrate 0 <= l <= 1>) dazu addiert.
     6. mit der neu berechneten Zuordnung wird nun erneut der Fehler (Residual) gebildet und jeder Zeile angehängt.
     7. wieder bei Schritt 3 beginnen, so oft durchführen bis keine Verbesserung mehr oder eine festgelegte Zahl an Durchführungen (z.B. 100 Trees) erreicht ist.
-    8. 
 - viele Durchführungen mit geringer learningrate führen zu besseren Ergebnissen.
 - https://www.youtube.com/watch?v=2xudPOBz-vs
 
@@ -146,7 +149,22 @@ x **Kumulative Inzidenz**
 x **Kurtosis**
 
 
+x **Linear Regression**
+- n Datenpunkte durch eine lineare Funktion beschreiben, sodass alle Fehlerquadrate minimiert werden.
+- R^2 berechnen (2D):
+    - zwischen 0 und 1, größer ist besser.
+    - R^2 kann interpretiert werden, als die Reduktion der Varianz um R^2 Prozent, wenn die x-Daten berücksichtigt werden oder.
+    - die x-Daten erklären R^2 Prozent der Variation der y-Daten (warum ändert sich y? weil x sich ändert!).
+    1. Variation berechnen für ein Vergleich der Daten mit dem Durchschnitt (horizontale konstante als Fit) & Variation für den linearen Fit berechnen: Variation ist das durchschnittliche Fehlerquadrat.
+    2. R^2 berechnet sich durch das Verhältnis von (Fehler konstanter Fit - Fehler linearer Fit) / (Fehler konstanter Fit).
+- der p-Wert sagt aus, ob der R^2 Wert statistisch signifikant/vertrauenswürdig ist.
+- https://www.youtube.com/watch?v=P8hT5nDai6A
+
+
+x **log(likelihood)**
+
 x **Logistical Regression**
+- 
 
 
 x **Logrank test**
@@ -185,9 +203,6 @@ x **Proportionalität (Statistik)**
 - durch Anpassen von n (Anzahl zufällig gewählter Spalten) kann der Random Forest jetzt optimiert werden
 
 
-x **Linear Regression**
-
-
 **Regression Tree**
 - binärer Entscheidungsbaum, welcher die Datenmenge durch Regression 'klassifiziert'.
 - binär heißt, jeder Knoten hat genau 2 Kanten.
@@ -203,6 +218,9 @@ x **Rule Learning**
 - Teil des Supervised Machine Learning, wobei ein Bezug zwischen Input Variable und Target Varibale erlernt wird, welcher durch einen Satz von Regeln repräsentiert werden kann. Die Klassifizierung erfolgt hier über ein Abgleichen des Inputs mit den erlernten Regeln (logical/numerical).
 The RIPPER (Repeated Incremental Pruning to Produce Error Reduction) algorithm can be used.
 
+
+**Squaring everything instead of taking the absolute**
+- warum werden so viele Fehler durch quadrierung positiv gemacht und nicht durch den Betrag? -> Weil es die Mathematik (z.B. Ableitungen), die anschließend angewandt wird, erheblich erleichtert.
 
 x **T-Verteilung vs. Normalverteilung**
 
