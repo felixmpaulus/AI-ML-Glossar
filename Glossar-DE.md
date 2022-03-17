@@ -155,9 +155,11 @@ x **Hazard-ratio**
 
 
 x **Kaplan-Meier plot**
-- Überlebenswahrscheinlichkeit über eine verstrichenen Zeit t
-- 'wie viel Prozent der 'Teilnehmer' leben zu einer absoluten Zeit t?'
-- 'non-parametric' Plot (keine Parameter involviert)
+- Überlebenswahrscheinlichkeit über eine verstrichenen Zeit t.
+- 'wie viel Prozent der 'Teilnehmer' leben zu einer absoluten Zeit t?' <- komplexer, wenn Zensuren berücksichtigt werden.
+- 'non-parametric' Plot (keine Parameter involviert).
+- der Plot berücksichtigt die exakten Zeitpunkte (im Gegensatz zum Life Table)
+- nach jedem aufgetretenen Ereignis werden die Überlebenswahrscheinlichkeiten neu geschätzt.
 
 
 x **Konfidenzintervall**
@@ -168,6 +170,31 @@ x **Kumulative Inzidenz**
 
 
 x **Kurtosis**
+
+
+**Life Tabels / Sterbetafel**
+- ein Life Table fasst die Daten der Teilnehmer in festgelegt Intervalle mit gleicher Größe zusammen.
+- 'wie viele Ereignisse sind zw. Tag 1 und 5, zw. 6 und 10, zw. 11 und 15, usw. aufgetreten?'
+- der Table enthält zu jedem Intervall folgende Daten:
+    - bei wie vielen Teilnehmern das Ereignis zu Beginn des Intervalls noch nicht eingetreten ist.
+    - bei wie vielen Teilnehmern das Ereignis während des Intervalls eingetreten ist.
+    - wie viele Teilnehmer zensiert wurden.
+- Nachteil: die Ergebnisse hängen von der Wahl des Zeitintervalls ab.
+- Periodissche Life Tables:
+    - berücksichtigen ein Sample von Teilnehmern zu einem festgelegten Zeitpunkt, unabhängig davon, wann der Startzeitpunkt jedes Teilnehmers war.
+    - Lebenserwartung einer gesamten Bevölkerung zu einer Zeit t, ohne dass die Startzeiten der Teilnehmer in Bezug gesetzt werden.
+- Kohort Life Table
+    - berücksichtigen nur Teilnehmer, die 'zusammen gestartet sind'.
+    - Lebenserwartung eines Teils einer Bevölkerung zu einer Zeit t, wobei die Teilnehmer alle im gleichen Jahr j geboren wurden. Es müssen also auch Teilnehmer berücksichtigt werden, die in Jahr j geboren wurden, jetzt aber schon tot sind.
+- Spalten im Table mit P -> Teilnehmer, D -> deaths (alle jeweils pro Zeitintervall):
+    - central death rate m: prozentualer Anteil Ereignisse an Gesamtteilnehmern -> D/p
+    - conditional probability of death q: prozentualer Anteil Ereignisse an Gesamtteilnehmern zu Beginn jedes Intervalls D/p+0.5D
+        - mit der Annahme, dass die Teilnehmerzahl die mittlere Teilnehmerzahl im Intervall ist, müssen noch die hälfte der Todesfäller dazuaddiert werden, um auf die Teilnehmerzahl zu Beginn eines Intervalls zu kommen
+    - condition probability of survival p: 1- q
+    - number surviving to age x: radix * p
+        - radix ist eine willkürliche gewählt Startbevölkerung (z.B. 100.000), wir untersuchen wie diese Bevölkerung über die Zeit abnimmt
+        - p beschreibt überlebenswahrscheinlichkeit des vorherigen Intervalls
+- https://www.youtube.com/watch?v=Dfe59glNXAQ
 
 
 x **Linear Regression**
@@ -195,7 +222,7 @@ x **Logistical Regression**
 
 
 x **Logrank test**
-    ->https://www.ncbi.nlm.nih.gov/pmc/articles/PMC403858/#ref3
+    -> https://www.ncbi.nlm.nih.gov/pmc/articles/PMC403858/#ref3
     -> https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1065034/
 
 
@@ -259,6 +286,10 @@ The RIPPER (Repeated Incremental Pruning to Produce Error Reduction) algorithm c
 - Daten müssen ggfs. vor Verwendung Zensiert werden
 
 
+**Survival Function / Überlebensfunktion**
+
+
+
 x **T-Verteilung vs. Normalverteilung**
 
 
@@ -272,7 +303,7 @@ x **T-Verteilung vs. Normalverteilung**
 - rechte Abschneidung
     - wenn das Ereignis eintritt, der Startzeitpunkt aber sehr weit in der Vergangenheit liegt.
     - 'wenn jemand an AIDS erkrankt, es aber nicht mehr festgestellt werden kann wann die HIV Infektion stattgefunden hat'
-        - würden die abgeschnittenen Daten hier nicht berücksichtigt werden, hätten die Daten einen Bias zu früher AIDS-Erkrankung nach HIV-Infektion
+        - würden die abgeschnittenen Daten hier nicht berücksichtigt werden, hätten die Daten einen Bias zu früher AIDS-Erkrankung nach HIV-Infektion 
 
 x **Überlebensfuntion**
 
