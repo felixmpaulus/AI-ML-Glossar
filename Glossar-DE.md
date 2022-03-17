@@ -59,6 +59,9 @@ x **CART (Classification and Regression Trees)**
     - Zensur wird als Kreis symbolisiert (Ereignis i.d.R. als Kreuz).
 
 
+x **Chi-Quadrat-Test**
+-> https://de.wikipedia.org/wiki/Chi-Quadrat-Test
+
 
 **Classification Tree**
 - innerhalb des Baumes kann auf verschiedene Datentypen geprüft werden (logicals, numerical).
@@ -157,13 +160,23 @@ x **Hazard-ratio**
 x **Kaplan-Meier plot**
 - Überlebenswahrscheinlichkeit über eine verstrichenen Zeit t.
 - 'wie viel Prozent der 'Teilnehmer' leben zu einer absoluten Zeit t?' <- komplexer, wenn Zensuren berücksichtigt werden.
-- 'non-parametric' Plot (keine Parameter involviert).
+- 'non-parametric' Plot (keine Parameter involviert, die die 'Kurve' beschreiben, sondern nur Abhängigkeit von einem Datensatz).
 - der Plot berücksichtigt die exakten Zeitpunkte (im Gegensatz zum Life Table)
-- nach jedem aufgetretenen Ereignis werden die Überlebenswahrscheinlichkeiten neu geschätzt.
+- nach jedem aufgetretenen Ereignis werden die Überlebenswahrscheinlichkeiten neu geschätzt:
+    1. die originalen Daten (inkl. Zensur) werden nach der Überlebenszeit sortiert (aufsteigend)
+        - Zensuren und Ereignisse werden in derselben Spalte beschrieben (Ereignis = 1, Zensur = 0)
+    2. Zeilen mit identischer Überlebenszeit werden zusammengefasst (Ereignisse addiert)
+    3. die Zeitintervalle werden bis (aber nicht inklusive) zum Zeitpunkt des jeweiligen Ereignisses gewählt
+        - z.B. 1. Ereignis nach 5 Tagen: 0 <= t < 5, 2. Ereignis nach 9 Tagen: 5 <= t < 9
+    4. das Überleben berechnet sich mit: S(t-1) * (n - d) / n
+        - d -> Anzahl Ereignisse im Intervall
+        - n -> Anzahl Teilnehmer noch ohne Ereignis
+        - S(t-1) -> Survival im vorherigen Intervall
+- der Median kann für S(t) = 0,5 abgelesen werden, das 90-Percentil bei S(t) = 0,9
 
 
-x **Konfidenzintervall**
-    -> https://studyflix.de/statistik/konfidenzintervall-1580
+x **Konfidenzintervall (Kaplan-Meier)**
+-> https://studyflix.de/statistik/konfidenzintervall-1580
 
 
 x **Kumulative Inzidenz**
@@ -217,13 +230,15 @@ x **Logistical Regression**
 - Predictor-Spalten können kontinuierlich/numerisch oder diskret sein
 - ordnet Daten einem true oder false zu
 - Kurve hat eine S-Form
-
 - https://www.youtube.com/watch?v=yIYKR4sgzI8&t=1s
 
 
-x **Logrank test**
-    -> https://www.ncbi.nlm.nih.gov/pmc/articles/PMC403858/#ref3
-    -> https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1065034/
+**Logrank test**
+- ein Logrank Test gibt Auskunft darüber, ob sich die Kaplan-Meier Plos zweier Populationen signifikant unterscheiden.
+- die Nullhypothese ist, dass die Survival-Plots identisch sind.
+1. die erwarteten Ereignisse für jedes Interval für beide Populationen werden berechnet und aufsummiert.
+2. mit den Chi-Qiadrat-Test kann dann getestet werden, ob sich die Kaplan-Meier Plots beider Populationen signifikant unterscheiden
+- https://www.youtube.com/watch?v=lxoWsVco_iM (22:00)
 
 
 x **Maximum Likelihood**
